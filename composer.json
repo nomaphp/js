@@ -1,0 +1,38 @@
+{
+  "name": "noma/js",
+  "type": "library",
+  "homepage": "https://github.com/nomaphp/js",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Asko Nõmm",
+      "email": "asko@nmm.ee",
+      "homepage": "https://nmm.ee",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "\\Noma\\Js\\": "src/"
+    },
+    "classmap": [
+      "src/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "\\Noma\\Js\\Tests\\": "tests/"
+    },
+    "autoload": [
+      "tests/"
+    ]
+  },
+  "require": {
+    "php": "^8.4",
+    "nikic/php-parser": "^5.4"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^7.2",
+    "phpunit/phpunit": "^12"
+  }
+}
