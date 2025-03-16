@@ -177,7 +177,10 @@ class Js
 
     private function parseArrowFunction(Expr\ArrowFunction $node): string
     {
-        return "() => " . $this->parseNode($node->expr);
+        $params = array_map(fn($p) => $this->parseNode($p), $node->params);
+        $expr = $this->parseNode($node->expr);
+
+        return Composer::arrowFunction($params, $expr);
     }
 
     private function parseBooleanNot(Expr\BooleanNot $node): string

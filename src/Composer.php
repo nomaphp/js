@@ -34,6 +34,11 @@ class Composer
         return "const {$name} = {$value}";
     }
 
+    public static function arrowFunction(array $params, string $expr): string
+    {
+        return "(" . implode(', ', $params) . ") => $expr";
+    }
+
     public static function interpolateString(array $parts): string
     {
         $parsedParts = array_map(function ($part) {
