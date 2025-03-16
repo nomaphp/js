@@ -3,10 +3,7 @@
 namespace Noma\Js\Jsi;
 
 use Noma\Js\Attributes\JsInteropClass;
-use Noma\Js\Attributes\JsInteropFunction;
 use Noma\Js\Attributes\JsInteropMethod;
-use Noma\Js\Attributes\JsInteropOverrideOutput;
-use Noma\Js\Jsi\Location;
 use Noma\Js\Jsi\Traits\HasEventTarget;
 
 #[JsInteropClass(name: "window")]
@@ -14,6 +11,7 @@ class Window
 {
     use HasEventTarget;
 
+    #[JsInteropMethod(isRoot: true)]
     public function alert(mixed $message): void {}
 
     #[JsInteropMethod(isProperty: true)]

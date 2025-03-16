@@ -45,6 +45,14 @@ class Js
         $this->traverseTree($this->ast);
     }
 
+    /**
+     * @return Jsi
+     */
+    public static function i(): Jsi
+    {
+        return new Jsi();
+    }
+
     public static function fromFile(string $path, string $version = '8.4', ?string $rootDir = null): string
     {
         return new self(file_get_contents($path), $version, $rootDir)->toString();
@@ -112,6 +120,11 @@ class Js
         );
     }
 
+    private function parseList(Expr\List_ $node): string
+    {
+        return Composer::list(array_map(fn($item) => $this->parseNode($item), $node->items));
+    }
+
     private function parseBinaryOp(Expr\BinaryOp $node, string $op): string
     {
         $left = $this->parseNode($node->left);
@@ -123,6 +136,11 @@ class Js
     private function parseString(Scalar\String_ $node): string
     {
         return "\"$node->value\"";
+    }
+
+    private function parseInterpolatedString(Scalar\InterpolatedString $node): string
+    {
+        return Composer::interpolateString($node->parts);
     }
 
     private function parseParam(Param $node): string
@@ -155,6 +173,11 @@ class Js
             path: $this->rootDir . '/' . $path,
             version: $this->phpVersion
         );
+    }
+
+    private function parseArrowFunction(Expr\ArrowFunction $node): string
+    {
+        return "() => " . $this->parseNode($node->expr);
     }
 
     private function parseBooleanNot(Expr\BooleanNot $node): string
@@ -469,11 +492,13 @@ class Js
             Expr\PropertyFetch::class => $this->parsePropertyFetch($node),
             Expr\Array_::class => $this->parseArray($node),
             Expr\Include_::class => $this->parseInclude($node),
+            Expr\ArrowFunction::class => $this->parseArrowFunction($node),
             Expr\Assign::class => $this->parseAssign($node),
             Expr\BitwiseNot::class => $this->parseBitwiseNot($node),
             Expr\BooleanNot::class => $this->parseBooleanNot($node),
             Expr\Variable::class => $this->parseVariable($node),
             Expr\FuncCall::class => $this->parseFunctionCall($node),
+            Expr\List_::class => $this->parseList($node),
             Expr\Ternary::class => $this->parseTernary($node),
             Expr\PostInc::class => $this->parsePostInc($node),
             Expr\PostDec::class => $this->parsePostDec($node),
@@ -522,6 +547,7 @@ class Js
             Scalar\String_::class => $this->parseString($node),
             Scalar\Int_::class => $node->value,
             Scalar\Float_::class => $node->value,
+            Scalar\InterpolatedString::class => $this->parseInterpolatedString($node),
             Param::class => $this->parseParam($node),
             PropertyItem::class => $this->parsePropertyItem($node),
             Arg::class => $this->parseArg($node),

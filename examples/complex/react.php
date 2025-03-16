@@ -9,8 +9,14 @@ use Noma\Js\Jsi\Stubs\ReactDom;
     $reactDom = (new Jsi)->import(from: "https://esm.sh/react-dom@18.2.0", as: ReactDom::class);
 
     $exampleComponent = function () use ($react) {
-        return $react::createElement("div", null, "Hello, React!");
+        [$state, $setState] = $react->useState(0);
+
+        $react->useEffect(function() {
+            echo 'This runs on mount.';
+        }, []);
+
+        return $react->createElement("button", ['onClick' => fn() => $setState($state + 1)], "Clicked $state times.");
     };
 
-    $reactDom::render($react::createElement($exampleComponent), (new Jsi\Document)->querySelector("#root"));
+    $reactDom->render($react->createElement($exampleComponent), (new Jsi\Document)->querySelector("#root"));
 });

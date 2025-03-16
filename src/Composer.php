@@ -2,6 +2,9 @@
 
 namespace Noma\Js;
 
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\InterpolatedStringPart;
+
 class Composer
 {
     public static function print(array $vars): string
@@ -29,6 +32,30 @@ class Composer
     public static function const(string $name, mixed $value): string
     {
         return "const {$name} = {$value}";
+    }
+
+    public static function interpolateString(array $parts): string
+    {
+        $parsedParts = array_map(function ($part) {
+            if ($part instanceof InterpolatedStringPart) {
+                return $part->value;
+            }
+
+            if ($part instanceof Variable) {
+                return '${' . $part->name . '}';
+            }
+
+            return "";
+        }, $parts);
+
+        $_js = implode(' ', $parsedParts);
+
+        return "`$_js`";
+    }
+
+    public static function list(array $vals): string
+    {
+        return "[" . implode(', ', $vals) . "]";
     }
 
     public static function function(string $name, array $params, array $stmts): string

@@ -3,7 +3,13 @@
 namespace Noma\Js\Jsi\Stubs;
 
 class React {
-    public static function createElement(...$args) {
+    public function createElement(...$args) {
 
+    }
+
+    public function useEffect(callable $callback, array $deps) {}
+
+    public function useState(mixed $defaultValue): array {
+        return [];
     }
 }
