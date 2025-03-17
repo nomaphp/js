@@ -15,7 +15,11 @@ use Noma\Js\Jsi\Stubs\ReactDom;
             echo 'This runs on mount.';
         }, []);
 
-        return $react->createElement("button", ['onClick' => fn() => $setState($state + 1)], "Clicked $state times.");
+        return $react->createElement(
+            "button",
+            ['onClick' => fn() => $setState($state + 1)],
+            "Clicked $state times."
+        );
     };
 
     $reactDom->render($react->createElement($exampleComponent), (new Jsi\Document)->querySelector("#root"));
